@@ -49,35 +49,12 @@ module.exports.handler = async (event) => {
 
 
     console.log("Before try block");
-    // ------------test mail gun------------------
-
-  //   const mg = mailgun({
-  //     apiKey: "",
-  //     domain: "demo.harishkumarvn.me",
-  // });
-
-  // const data = {
-  //     from: "harisshkumar10@gmail.com",
-  //     to: [email],
-  //     subject: "Hello",
-  //     text: "Testing Mailgun in AWS Lambda!",
-  // };
-
-  // mg.messages().send(data, (error, body) => {
-  //     if (error) {
-  //         console.error("Error sending email:", error);
-  //     } else {
-  //         console.log("Email sent successfully:", body);
-  //     }
-  // });
-
-    // -------------test end----------------------
+  
   try{
     
     const fileName = `${email}${Date.now()}.zip`;
 
-  // Define the bucket name and file name
-  // const bucketName = 'submission-bucket-002766063';
+ 
   const bucketName = process.env.gcpBucketName;
   const bucket = storage.bucket(bucketName);
  
@@ -86,25 +63,6 @@ module.exports.handler = async (event) => {
   const response = await axios.get(url, { responseType: 'arraybuffer' });
   const fileContent = Buffer.from(response.data);
 
-  // ---------------------testing file inside bucket-----------------------------------
-
-// Create an AdmZip instance with the downloaded buffer
-// const zip = new AdmZip(response.data);
-
-// // Get entries (files and directories) in the ZIP file
-// const entries = zip.getEntries();
-
-// // Check if there are any entries (files or directories)
-// if (entries && entries.length > 0) {
-//   console.log('ZIP file has contents:');
-//   entries.forEach((entry) => {
-//     console.log(entry.entryName);
-//   });
-// } else {
-//   console.log('ZIP file is empty.');
-// }
-
-// -------------------------Testing file inside bucket-------------------------
 
     console.log('File entered try block');
     console.log(fileContent);
@@ -125,7 +83,7 @@ module.exports.handler = async (event) => {
 
   try {
     console.log("Inside success mail try block");
-    // const sendemail = 'harishkumarvaithyannandhagopu@gmail.com';
+   
     const sendemail = email;
     const emailParams = {
       Destination: {
@@ -161,7 +119,7 @@ module.exports.handler = async (event) => {
         },
       },
       Source: process.env.sourceEmail, // Replace with your SES verified email address
-      // Source: "harisshkumar10@harishkumarvn.me",
+      
     };
 
      await ses.sendEmail(emailParams).promise();
@@ -200,7 +158,7 @@ module.exports.handler = async (event) => {
 
       console.log("Inside failure mail try block");
 
-    // const sendemail = 'harishkumarvaithyannandhagopu@gmail.com';
+    
     const sendemail = email;
     const emailParams = {
       Destination: {
@@ -235,8 +193,7 @@ module.exports.handler = async (event) => {
         },
       },
       Source: process.env.sourceEmail, // Replace with your SES verified email address
-      // Source: "harisshkumar10@harishkumarvn.me",
-
+    
     };
 
     var timestamp = new Date().toISOString();
@@ -263,8 +220,7 @@ module.exports.handler = async (event) => {
       // Handle DynamoDB error as needed
     }
 
-    // await ses.sendEmail(emailParams).promise();
-    // console.log('Invalid Email sent successfully');
+  
   } catch (sesError) {
     console.error('Error sending SES email:', sesError.message);
     console.log('Email not sent due to an SES error');
